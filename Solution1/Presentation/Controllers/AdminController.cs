@@ -11,14 +11,22 @@ namespace Presentation.Controllers
     {
         public IActionResult Index()
         {
-            if (User.Identity.IsAuthenticated == false) {
-            
-                return RedirectToAction("Error", "Home");
+
+
+
+           //    if(User.Identity == null) return RedirectToAction("Error", "Home");
+
+            if (
+                    User.Identity.IsAuthenticated == false)
+            {
+
+                TempData["error"] = "Äccess Denied";
+
+                return RedirectToAction("Index", "Home");
                 //Index = Action
                 //Home = Controller's name
-
             }
-            
+             
             return View();
         }
     }
