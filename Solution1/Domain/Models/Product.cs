@@ -23,7 +23,7 @@ namespace Domain.Models
 
         public Product()
         { 
-            Id=Guid.NewGuid();
+          //  Id=Guid.NewGuid();
         }
 
 
@@ -35,12 +35,16 @@ namespace Domain.Models
         public string Description { get; set; }
 
         [Range(0,double.MaxValue)]
-        public double Price { get; set; }
+        public double RetailPrice { get; set; }
 
         [ForeignKey("Category")]
         public int CategoryFk { get; set; } //actual foreign key
         public Category Category { get; set; } // navigational property
   
-        public string Image { get; set; }
+        public string? Image { get; set; }
+
+        public string Supplier { get; set; }
+        public double WholesalePrice { get; set; }
+        public int Stock { get; set; }
     }
 }
