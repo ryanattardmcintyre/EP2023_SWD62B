@@ -39,7 +39,9 @@ namespace Domain.Models
 
         [ForeignKey("Category")]
         public int CategoryFk { get; set; } //actual foreign key
-        public Category Category { get; set; } // navigational property
+        public virtual Category Category { get; set; } // navigational property
+        //note: when this property does not populate itself with the data from the other
+        //      table (e.g. Categories) normally its becuase LazyLoading was not enabled
   
         public string? Image { get; set; }
 

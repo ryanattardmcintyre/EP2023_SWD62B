@@ -28,7 +28,7 @@ namespace DataAccess.Repositories
         //Creation
         public void AddProduct(Product product) {
             _shoppingCartDbContext.Products.Add(product);
-            _shoppingCartDbContext.SaveChanges();
+            _shoppingCartDbContext.SaveChanges(); //commits to the database
         }
 
         //Update
