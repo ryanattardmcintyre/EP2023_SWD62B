@@ -45,7 +45,7 @@ namespace Domain.Models
   
         public string? Image { get; set; }
 
-        public string Supplier { get; set; }
+        public string? Supplier { get; set; }
         public double WholesalePrice { get; set; }
         public int Stock { get; set; }
     }

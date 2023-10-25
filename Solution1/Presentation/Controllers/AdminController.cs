@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DataAccess.Repositories;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers
 {
@@ -9,11 +10,13 @@ namespace Presentation.Controllers
     //4. Don't change especially the name (normal practice)
     public class AdminController : Controller
     {
+
+
+     
         public IActionResult Index()
         {
 
-
-
+        
            //    if(User.Identity == null) return RedirectToAction("Error", "Home");
 
             if (
@@ -29,5 +32,8 @@ namespace Presentation.Controllers
              
             return View();
         }
+
+
+      
     }
 }

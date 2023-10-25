@@ -24,6 +24,12 @@ namespace DataAccess.Repositories
         }
         //IQueryable you can view the data inside while debugging
        
+        public Product? GetProduct(Guid id)
+        {
+            //Select Top 1 Product.Name, Product.Id, product.... From Products Where Product.id = id
+            return GetProducts().SingleOrDefault(x => x.Id == id);
+        }
+
 
         //Creation
         public void AddProduct(Product product) {
@@ -35,7 +41,11 @@ namespace DataAccess.Repositories
         public void UpdateProduct(Product product) { }
 
         //Delete
-        public void DeleteProduct(Product product) { }
+        public void DeleteProduct(Product product) {
+            _shoppingCartDbContext.Products.Remove(product);
+            _shoppingCartDbContext.SaveChanges();
+        
+        }
 
     }
 }

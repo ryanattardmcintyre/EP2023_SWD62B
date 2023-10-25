@@ -23,8 +23,15 @@ namespace Presentation
             builder.Services.AddControllersWithViews();
 
             //register the client classes with the injector class
-            builder.Services.AddScoped(typeof(ProductsRepository)); //****
+            builder.Services.AddScoped(typeof(ProductsRepository));
+            builder.Services.AddScoped(typeof(CategoriesRepository));
 
+            //addscoped = it will create ONE instance per request
+            //addtransient = it will create one instance per call
+            //addsingleton = it will create ONE instance for all requests by all users;
+                             //which means that that one instance if being used by user a, user b has to wait until
+                             //                 that one instance is released
+            
 
             var app = builder.Build();
 

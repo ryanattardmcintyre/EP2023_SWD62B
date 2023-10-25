@@ -58,7 +58,7 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.RetailPrice)
+                    € @item.RetailPrice
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CategoryName)
@@ -70,9 +70,12 @@
                 @Html.DisplayFor(modelItem => item.Stock)
             </td>
             <td>
-                @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
+                @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |*@
+                @Html.ActionLink("See Details", "Details", new {  id=item.Id   }) |
+               @* <a href="\Products\Details?id=@item.Id">Details</a>*@
+
+                    <a href="\Products\Delete?id=@item.Id" onclick='return window.confirm("Are you sure?")'>Delete</a>
+              @*  @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
             </td>
         </tr>
 }

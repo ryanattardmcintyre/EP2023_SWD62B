@@ -1,6 +1,7 @@
 ﻿using Domain.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
 
 namespace Presentation.Models.ViewModels
 {
@@ -19,6 +20,8 @@ namespace Presentation.Models.ViewModels
        // public string? Image { get; set; }
 
         public string Supplier { get; set; }
+
+        [DisplayName("Wholesale Price")]
         public double WholesalePrice { get; set; }
         public int Stock { get; set; }
     }
