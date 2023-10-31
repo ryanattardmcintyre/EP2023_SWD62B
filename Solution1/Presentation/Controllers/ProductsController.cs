@@ -2,6 +2,7 @@
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Models.ViewModels;
+using System.IO;
 
 namespace Presentation.Controllers
 {
@@ -76,11 +77,37 @@ namespace Presentation.Controllers
 
         //2nd action called - it will receive the data about the product which will then be saved into the db
         [HttpPost]
-        public IActionResult Create(CreateProductViewModel p)
+        public IActionResult Create(CreateProductViewModel p, [FromServices]IWebHostEnvironment host)
         {
             //validation
+           
             try
             {
+                string relativePath = "";
+                //upload of an image
+                if(p.ImageFile != null)
+                {
+                    //1. generate a unique filename
+                    string newFilename = Guid.NewGuid().ToString()
+                        + Path.GetExtension(p.ImageFile.FileName); //.jpg
+                    //762F8E31-5D1E-4FFF-BA30-95D63E48FE55.jpg
+
+                    //2. form the relative path
+                    relativePath = "/images/" + newFilename;
+
+                    //3. form the absolute path
+                    //   to save the physical file //C:\Users\attar\source\repos\EP2023_SWD62B\Solution1\Presentation\wwwroot
+                    string absolutePath = host.WebRootPath + "\\images\\" + newFilename;
+
+                    //4. save the image in the folder
+                    using (FileStream fs = new FileStream(absolutePath, FileMode.CreateNew))
+                    {
+                        p.ImageFile.CopyTo(fs);
+                        fs.Flush();
+                    }
+                }
+
+                //set the relative path in the Image property
                 _productsRepository.AddProduct(
                    new Product()
                    {
@@ -90,7 +117,8 @@ namespace Presentation.Controllers
                        WholesalePrice = p.WholesalePrice,
                        Stock = p.Stock,
                        Supplier = p.Supplier,
-                       CategoryFk = p.CategoryFk
+                       CategoryFk = p.CategoryFk,
+                       Image = relativePath
                    }
                     );
 

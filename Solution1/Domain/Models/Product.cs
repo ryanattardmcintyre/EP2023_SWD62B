@@ -43,7 +43,10 @@ namespace Domain.Models
         //note: when this property does not populate itself with the data from the other
         //      table (e.g. Categories) normally its becuase LazyLoading was not enabled
   
-        public string? Image { get; set; }
+        public string? Image { get; set; } //recommendation: do not store physical images in the database
+                                           //in the db store relative paths to the images e.g. /Images/nameofimage.jpg
+                                           // relative path e.g. /Images/nameofimage.jpg
+                                           //[NOT] absolute path e.g. C:/../../../../../Imaes/nameofimage.jpg
 
         public string? Supplier { get; set; }
         public double WholesalePrice { get; set; }

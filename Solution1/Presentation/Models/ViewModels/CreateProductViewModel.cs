@@ -24,5 +24,7 @@ namespace Presentation.Models.ViewModels
         [DisplayName("Wholesale Price")]
         public double WholesalePrice { get; set; }
         public int Stock { get; set; }
+
+        public IFormFile ImageFile { get; set; }
     }
 }
