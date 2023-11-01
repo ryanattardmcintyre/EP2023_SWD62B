@@ -154,7 +154,8 @@ namespace Presentation.Controllers
                     Name = product.Name,
                     RetailPrice = product.RetailPrice,
                     Stock = product.Stock,
-                    CategoryName = product.Category.Name
+                    CategoryName = product.Category.Name,
+                    Image = product.Image
                 };
                 //AutoMapper (from nuget)
 
@@ -181,6 +182,32 @@ namespace Presentation.Controllers
             //vs
             //return RedirectToAction("Index"); => redirect the user to the action and NOT the page
         }
+
+
+
+        [HttpGet]
+        public IActionResult Edit(Guid id) {
+
+            CreateProductViewModel myEditingModel = new CreateProductViewModel(); //This has to be changed to UpdateProductViewModel
+
+            var myEditingProduct = _productsRepository.GetProduct(id);
+
+            myEditingModel.RetailPrice = myEditingProduct.RetailPrice;
+            myEditingModel.WholesalePrice=     myEditingProduct.WholesalePrice;
+            myEditingModel.Stock= myEditingProduct.Stock;
+            myEditingModel.CategoryFk = myEditingProduct.CategoryFk;
+            myEditingModel.Description=myEditingProduct.Description;
+            myEditingModel.Stock = myEditingProduct.Stock;
+            myEditingModel.Supplier = myEditingProduct.Supplier;
+            
+
+            return View(myEditingModel); //so that in the textboxes the original details will be shown to the user to be edited
+        
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Guid id, CreateProductViewModel) { }
+
 
 
     }

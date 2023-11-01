@@ -38,7 +38,24 @@ namespace DataAccess.Repositories
         }
 
         //Update
-        public void UpdateProduct(Product product) { }
+        public void UpdateProduct(Product product) {
+
+            var originalProduct = GetProduct(product.Id); //constraint : the id is never going to change
+            if (originalProduct != null)
+            {
+                originalProduct.Supplier = product.Supplier;
+                originalProduct.RetailPrice = product.RetailPrice;
+                originalProduct.WholesalePrice = product.WholesalePrice;
+                originalProduct.Name = product.Name;
+                originalProduct.CategoryFk = product.CategoryFk;
+                originalProduct.Description = product.Description;
+                originalProduct.Stock = product.Stock;
+
+                _shoppingCartDbContext.SaveChanges();
+
+            }
+        
+        }
 
         //Delete
         public void DeleteProduct(Product product) {
