@@ -10,17 +10,9 @@
     <a asp-action="Create">Create New</a>
 </p>
 
-<div>
-    <form method="post" action="\Products\Search"  >
-        <div class="form-group">
-            <label for="search">Search</label>
-            <input name="keyword" type="text" class="form-control" id="search" placeholder="Enter keyword to search for">
-        </div>
-        
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+@Html.Partial("PartialSearch")
 
-</div>
+
 
 <div>
     @foreach(var item in Model)
