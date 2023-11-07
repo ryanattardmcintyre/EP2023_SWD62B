@@ -188,10 +188,14 @@ namespace Presentation.Controllers
         [HttpGet]
         public IActionResult Edit(Guid id) {
 
-            CreateProductViewModel myEditingModel = new CreateProductViewModel(); //This has to be changed to UpdateProductViewModel
+            EditProductViewModel myEditingModel = new EditProductViewModel(); //This has to be changed to UpdateProductViewModel
+
+            myEditingModel.Categories = _categoriesRepository.GetCategories().ToList();
+
 
             var myEditingProduct = _productsRepository.GetProduct(id);
 
+            //editable
             myEditingModel.RetailPrice = myEditingProduct.RetailPrice;
             myEditingModel.WholesalePrice=     myEditingProduct.WholesalePrice;
             myEditingModel.Stock= myEditingProduct.Stock;
@@ -199,14 +203,90 @@ namespace Presentation.Controllers
             myEditingModel.Description=myEditingProduct.Description;
             myEditingModel.Stock = myEditingProduct.Stock;
             myEditingModel.Supplier = myEditingProduct.Supplier;
-            
+            myEditingModel.Name = myEditingProduct.Name;
+
+            //non-editable //these are used to display them on screen/evaluate them only!
+            myEditingModel.Image = myEditingProduct.Image;
+            myEditingModel.Id = myEditingProduct.Id;
 
             return View(myEditingModel); //so that in the textboxes the original details will be shown to the user to be edited
         
         }
 
         [HttpPost]
-        public IActionResult Edit(Guid id, CreateProductViewModel) { }
+        public IActionResult Edit(EditProductViewModel p, [FromServices] IWebHostEnvironment host)
+        {
+            //validation
+
+            try
+            {
+                string relativePath = "";
+                //upload of an image
+                if (p.ImageFile != null)
+                {
+                    //1. generate a unique filename
+                    string newFilename = Guid.NewGuid().ToString()
+                        + Path.GetExtension(p.ImageFile.FileName); //.jpg
+                    //762F8E31-5D1E-4FFF-BA30-95D63E48FE55.jpg
+
+                    //2. form the relative path
+                    relativePath = "/images/" + newFilename;
+
+                    //3. form the absolute path
+                    //   to save the physical file //C:\Users\attar\source\repos\EP2023_SWD62B\Solution1\Presentation\wwwroot
+                    string absolutePath = host.WebRootPath + "\\images\\" + newFilename;
+
+                    //4. save the image in the folder
+                    using (FileStream fs = new FileStream(absolutePath, FileMode.CreateNew))
+                    {
+                        p.ImageFile.CopyTo(fs);
+                        fs.Flush();
+                    }
+
+                    ///////////////////////////////  delete the old image
+                    string oldAbsolutePath = host.WebRootPath + "\\images\\" + System.IO.Path.GetFileName(p.Image);
+                    //or call this:  _productsRepository.GetProduct(p.Id).Image
+                    System.IO.File.Delete(oldAbsolutePath);
+
+                }
+                else
+                {
+                    //retain the old image
+                    //note: old image will still be saved
+                    //p << paremeter, Image contains the old relative path, p is populated because the hidden retained p.Id
+                    relativePath = p.Image; // _productsRepository.GetProduct(p.Id).Image; //<<Image contains the relative path 
+                }
+
+                //set the relative path in the Image property
+                _productsRepository.UpdateProduct(
+                   new Product()
+                   {
+                       Description = p.Description,
+                       Name = p.Name,
+                       RetailPrice = p.RetailPrice,
+                       WholesalePrice = p.WholesalePrice,
+                       Stock = p.Stock,
+                       Supplier = p.Supplier,
+                       CategoryFk = p.CategoryFk,
+                       Image = relativePath,
+                       Id= p.Id //<<<<<<<<<<<<<<<<<< imp: because in the UpdateProduct(...) it will identify the product that needs to be overwritten
+                   }
+                    );
+
+                TempData["message"] = "Product updated successfully!";
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = "Product not saved! Check your inputs!";
+                p.Categories = _categoriesRepository.GetCategories().ToList();
+                return View(p);
+            }
+
+
+        }
+
 
 
 

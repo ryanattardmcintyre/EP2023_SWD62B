@@ -50,6 +50,7 @@ namespace DataAccess.Repositories
                 originalProduct.CategoryFk = product.CategoryFk;
                 originalProduct.Description = product.Description;
                 originalProduct.Stock = product.Stock;
+                originalProduct.Image = product.Image;
 
                 _shoppingCartDbContext.SaveChanges();
 
