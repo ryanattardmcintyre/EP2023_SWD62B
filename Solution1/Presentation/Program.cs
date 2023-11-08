@@ -1,5 +1,6 @@
 using DataAccess.DataContext;
 using DataAccess.Repositories;
+using Domain.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
  
@@ -23,7 +24,7 @@ namespace Presentation
             builder.Services.AddControllersWithViews();
 
             //register the client classes with the injector class
-            builder.Services.AddScoped(typeof(ProductsRepository));
+            builder.Services.AddScoped<IProducts, ProductsRepository>();
             builder.Services.AddScoped(typeof(CategoriesRepository));
 
             //addscoped = it will create ONE instance per request

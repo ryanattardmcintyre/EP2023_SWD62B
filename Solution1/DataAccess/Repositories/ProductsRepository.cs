@@ -1,4 +1,5 @@
 ﻿using DataAccess.DataContext;
+using Domain.Interfaces;
 using Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 namespace DataAccess.Repositories
 {
     //Dependency Injection = is a design pattern which manages the creation of instances (objects) efficiently
-    public class ProductsRepository
+    public class ProductsRepository: IProducts
     {
         private ShoppingCartDbContext _shoppingCartDbContext;
         public ProductsRepository(ShoppingCartDbContext shoppingCartDbContext) { //assume that shoppingCartDbContext was already created

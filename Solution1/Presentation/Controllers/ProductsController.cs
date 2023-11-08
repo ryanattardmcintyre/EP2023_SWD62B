@@ -1,4 +1,5 @@
 ﻿using DataAccess.Repositories;
+using Domain.Interfaces;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Models.ViewModels;
@@ -6,11 +7,13 @@ using System.IO;
 
 namespace Presentation.Controllers
 {
+    //note: (From today) we are making the business logic Controller, more flexible/open by asking for any instance which inherits from IProducts
+    //note (is no longer applicable): (what we were doing until today): we are making the business logic Controller asking for an instance of ProductsRepository
     public class ProductsController : Controller
     {
-        private ProductsRepository _productsRepository;
+        private IProducts _productsRepository;
         private CategoriesRepository _categoriesRepository;
-        public ProductsController(ProductsRepository productsRepository
+        public ProductsController(IProducts productsRepository
             , CategoriesRepository categoriesRepository) { 
             _productsRepository = productsRepository;
             _categoriesRepository = categoriesRepository;
