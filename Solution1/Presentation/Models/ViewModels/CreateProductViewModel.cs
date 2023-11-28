@@ -2,11 +2,14 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
+using Microsoft.AspNetCore.Mvc;
+using DataAccess.Repositories;
 
 namespace Presentation.Models.ViewModels
 {
     public class CreateProductViewModel
     {
+       
         public List<Category> Categories { get; set; }
 
 
@@ -16,6 +19,9 @@ namespace Presentation.Models.ViewModels
 
         [Range(0, double.MaxValue)]
         public double RetailPrice { get; set; }
+
+        [Required(ErrorMessage = "Category was not chosen")]
+        [Presentation.Validators.CategoryValidator()]
         public int CategoryFk { get; set; } //actual foreign key
        // public string? Image { get; set; }
 

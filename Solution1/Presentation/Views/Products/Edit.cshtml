@@ -35,6 +35,7 @@
                         if (c.Id == Model.CategoryFk)
                         {
                             <option selected value="@c.Id">@c.Name</option>
+                            
                         }
                         else
                         {
@@ -73,7 +74,7 @@
             <input name="Ïd" type="hidden" class="form-control" value="@Model.Id" />
             
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input  type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>

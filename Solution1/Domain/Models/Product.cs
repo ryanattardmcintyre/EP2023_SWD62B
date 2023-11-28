@@ -30,11 +30,13 @@ namespace Domain.Models
         [Key] //note: by default .netcore, takes the property called "Id" and assumes that that is the primary key
         public Guid Id { get; set; } //B4A270B8-B756-411C-8C92-6DACF8CD4602
 
+        public string? Owner { get; set; }
+
         [Required(ErrorMessage ="Name cannot be left blank")] //note: name cannot be left blank/null
         public string Name { get; set; }
         public string Description { get; set; }
 
-        [Range(0,double.MaxValue)]
+        [Range(0, double.MaxValue)]
         public double RetailPrice { get; set; }
 
         [ForeignKey("Category")]
@@ -49,6 +51,10 @@ namespace Domain.Models
                                            //[NOT] absolute path e.g. C:/../../../../../Imaes/nameofimage.jpg
 
         public string? Supplier { get; set; }
+
+        //[RegularExpression(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$", ErrorMessage ="Its not a valid email address")]
+        //public string SupplierEmail { get; set; }
+
         public double WholesalePrice { get; set; }
         public int Stock { get; set; }
     }

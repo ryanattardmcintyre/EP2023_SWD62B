@@ -19,5 +19,7 @@ namespace Presentation.Models.ViewModels
 
         public string? Image { get; set; }
         public int Stock { get; set; }
+
+        public string Owner { get; set; }
     }
 }

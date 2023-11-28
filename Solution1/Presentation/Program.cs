@@ -24,6 +24,9 @@ namespace Presentation
             builder.Services.AddControllersWithViews();
 
             //register the client classes with the injector class
+            //C:\Users\attar\source\repos\EP2023_SWD62B\Solution1\Presentation\Data\
+            string absolutePath = builder.Environment.ContentRootPath + "Data\\products.json";
+            //builder.Services.AddScoped<IProducts, ProductsJsonRepository>(x => new ProductsJsonRepository(absolutePath));
             builder.Services.AddScoped<IProducts, ProductsRepository>();
             builder.Services.AddScoped(typeof(CategoriesRepository));
 

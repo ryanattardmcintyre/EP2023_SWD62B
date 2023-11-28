@@ -15,13 +15,38 @@ namespace DataAccess.Repositories
         //GetProduct //from the list inside my json file
         //AddProduct //to the list inside by json file.....
 
+
+
+
+
         string filePath;
-        public ProductsJsonRepository(string pathToProductsFile) { filePath = pathToProductsFile; }
+        public ProductsJsonRepository(string pathToProductsFile) { 
+            filePath = pathToProductsFile; 
+        
+            if (System.IO.File.Exists(filePath) == false) {
+
+                using (var myFile = System.IO.File.Create(filePath))
+                {
+                    myFile.Close(); //if you dont close yourselves it will give you an error later on....
+                }
+            }
+        
+        
+        }
         
         
         public void AddProduct(Product product)
         {
-            throw new NotImplementedException();
+            product.Id = Guid.NewGuid(); //so the id is never left to 000000000000000
+
+            var myList = GetProducts().ToList();
+
+            myList.Add(product);
+
+            string jsonString = JsonSerializer.Serialize(myList); //converts from an object to a json string
+
+            System.IO.File.WriteAllText(filePath, jsonString);
+
         }
 
         public void DeleteProduct(Product product)
@@ -31,7 +56,7 @@ namespace DataAccess.Repositories
 
         public Product? GetProduct(Guid id)
         {
-            throw new NotImplementedException();
+           return GetProducts().SingleOrDefault(x=>x.Id == id);
         }
 
         public IQueryable<Product> GetProducts()

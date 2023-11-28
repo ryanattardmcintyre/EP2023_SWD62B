@@ -1,6 +1,7 @@
 ﻿using DataAccess.Repositories;
 using Domain.Interfaces;
 using Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Models.ViewModels;
 using System.IO;
@@ -37,9 +38,11 @@ namespace Presentation.Controllers
                            Image = p.Image,
                            RetailPrice = p.RetailPrice,
                            Stock = p.Stock,
-                           CategoryName = p.Category.Name
+                           CategoryName =  _categoriesRepository.GetCategories().SingleOrDefault(x=>x.Id == p.CategoryFk).Name
+                           //p.Category.Name //above code was applied because Categories were not yet migrated to be stored in json
                        };
 
+             
             return View(output);
         }
 
@@ -58,7 +61,7 @@ namespace Presentation.Controllers
                              Image = p.Image,
                              RetailPrice = p.RetailPrice,
                              Stock = p.Stock,
-                             CategoryName = p.Category.Name
+                             CategoryName = _categoriesRepository.GetCategories().SingleOrDefault(x => x.Id == p.CategoryFk).Name
                          };
 
             return View("Index", output); //database call + re-using the same Index View*******
@@ -68,6 +71,7 @@ namespace Presentation.Controllers
 
         //1st action called - it will load the Create View where the user can type in the data
         [HttpGet]
+        [Authorize] //method is now only accessible by non-anonymous users
         public IActionResult Create() {
             //we need to give the user a list of categories to choose from
 
@@ -80,12 +84,22 @@ namespace Presentation.Controllers
 
         //2nd action called - it will receive the data about the product which will then be saved into the db
         [HttpPost]
+        [Authorize] //method is now only accessible by non-anonymous users
         public IActionResult Create(CreateProductViewModel p, [FromServices]IWebHostEnvironment host)
         {
             //validation
            
             try
             {
+                ModelState.Remove("Categories");
+                //isValid is going to be true if all the validators show a true;
+                //if one of the validators signals a non-acceptable input isValid is going to be false
+                if (ModelState.IsValid == false)
+                {
+                    p.Categories = _categoriesRepository.GetCategories().ToList();
+                    return View(p);
+                }
+
                 string relativePath = "";
                 //upload of an image
                 if(p.ImageFile != null)
@@ -121,7 +135,8 @@ namespace Presentation.Controllers
                        Stock = p.Stock,
                        Supplier = p.Supplier,
                        CategoryFk = p.CategoryFk,
-                       Image = relativePath
+                       Image = relativePath,
+                       Owner = User.Identity.Name
                    }
                     );
 
@@ -157,8 +172,9 @@ namespace Presentation.Controllers
                     Name = product.Name,
                     RetailPrice = product.RetailPrice,
                     Stock = product.Stock,
-                    CategoryName = product.Category.Name,
-                    Image = product.Image
+                    CategoryName = _categoriesRepository.GetCategories().SingleOrDefault(x => x.Id == product.CategoryFk).Name,
+                    Image = product.Image,
+                    Owner = product.Owner
                 };
                 //AutoMapper (from nuget)
 
@@ -173,8 +189,15 @@ namespace Presentation.Controllers
             if (product == null) { TempData["error"] = "No product to delete!"; }
             else
             {
-                _productsRepository.DeleteProduct(product);
-                TempData["message"] = product.Name + " has been deleted";
+                if (User.Identity.Name == product.Owner)
+                {
+                    _productsRepository.DeleteProduct(product);
+                    TempData["message"] = product.Name + " has been deleted";
+                }
+                else
+                {
+                    TempData["error"] = "Access Denied!";
+                }
             }
 
             return RedirectToAction("Index");
