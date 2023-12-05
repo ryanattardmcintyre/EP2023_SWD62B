@@ -1,12 +1,8 @@
-using DataAccess.DataContext;
-using DataAccess.Repositories;
-using Domain.Interfaces;
-using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
- 
+using WebApplication1.Data;
 
-namespace Presentation
+namespace WebApplication1
 {
     public class Program
     {
@@ -16,27 +12,13 @@ namespace Presentation
 
             // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-            builder.Services.AddDbContext<ShoppingCartDbContext>(options =>
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<CustomUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ShoppingCartDbContext>();
+            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
-
-            //register the client classes with the injector class
-            //C:\Users\attar\source\repos\EP2023_SWD62B\Solution1\Presentation\Data\
-            string absolutePath = builder.Environment.ContentRootPath + "Data\\products.json";
-            //builder.Services.AddScoped<IProducts, ProductsJsonRepository>(x => new ProductsJsonRepository(absolutePath));
-            builder.Services.AddScoped<IProducts, ProductsRepository>();
-            builder.Services.AddScoped(typeof(CategoriesRepository));
-
-            //addscoped = it will create ONE instance per request
-            //addtransient = it will create one instance per call
-            //addsingleton = it will create ONE instance for all requests by all users;
-                             //which means that that one instance if being used by user a, user b has to wait until
-                             //                 that one instance is released
-            
 
             var app = builder.Build();
 

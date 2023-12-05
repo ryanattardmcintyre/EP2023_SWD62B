@@ -11,7 +11,7 @@ using System.Xml.Linq;
 
 namespace DataAccess.DataContext
 {
-    public class ShoppingCartDbContext: IdentityDbContext //it gives you the ability to use the IdentityManagement module
+    public class ShoppingCartDbContext: IdentityDbContext<CustomUser> //it gives you the ability to use the IdentityManagement module
     {
         public ShoppingCartDbContext(DbContextOptions<ShoppingCartDbContext> options)
            : base(options)

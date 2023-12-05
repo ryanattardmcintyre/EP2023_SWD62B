@@ -1,7 +1,6 @@
-﻿@using Domain.Models;
-@using Microsoft.AspNetCore.Identity
-@inject SignInManager<CustomUser> SignInManager
-@inject UserManager<CustomUser> UserManager
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
